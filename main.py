@@ -13,6 +13,7 @@ from scipy.optimize import curve_fit
 
 FIGURES_PATH = './Figures'
 FILENAME = './data.dat'
+SAVE_FIGURES_MODE = True
 
 
 @dataclass
@@ -109,11 +110,11 @@ def main() -> None:
         print('Couldn\'t read data. Terminating...')
         return
     
-    plot_spectrums(data.frequencies, data.spectrums, True)
+    plot_spectrums(data.frequencies, data.spectrums, SAVE_FIGURES_MODE)
     peaks = get_peaks_all(data.spectrums)
     pprint(peaks)
     concentrations = get_concentrations(data.frequencies, data.measurements, data.spectrums)
-    plot_concentrations(data.timeline, concentrations, data.spectrums.keys(), True)
+    plot_concentrations(data.timeline, concentrations, data.spectrums.keys(), SAVE_FIGURES_MODE)
     k = get_reaction_rate(concentrations, data.timeline)
     print(f'Reaction rate: {k:.2}')
 
