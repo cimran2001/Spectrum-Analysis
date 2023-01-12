@@ -49,7 +49,6 @@ def import_data(filename: str) -> Optional[Data]:
 def plot_spectrums(frequencies: np.array, spectrums: Dict[str, np.array], save_figure: bool = False) -> None:
     for name, values in spectrums.items():
         plt.clf()
-        plt.figure()
         title = f'{name}\'s Spectrum'
         plt.title(title)
         plt.plot(frequencies, values)
@@ -77,7 +76,6 @@ def get_concentrations(frequencies: np.array, measurements: np.array, spectrums:
 
 def plot_concentrations(timeline: np.array, concentrations: np.array, labels: List[str], save_figure: bool = False) -> None:
     plt.clf()
-    plt.figure()
     for row, label in enumerate(labels):
         plt.plot(timeline, concentrations[row], label=label)
     plt.xlabel('Elapsed time, seconds')
