@@ -12,7 +12,7 @@ from scipy.optimize import curve_fit
 
 
 FIGURES_PATH = './Figures'
-FILENAME = './data.dat'
+FILENAME = './data2.dat'
 SAVE_FIGURES_MODE = True
 
 
@@ -32,7 +32,7 @@ def import_data(filename: str) -> Optional[Data]:
     with open(filename, 'rb') as f:
         data = pickle.load(f)
 
-    title = data['title']
+    title = data['Title']
 
     freq_max = data['Frequency Max']
     freq_min = data['Frequency Min']
