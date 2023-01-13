@@ -12,7 +12,7 @@ from scipy.optimize import curve_fit
 
 
 FIGURES_PATH = './Figures'
-FILENAME = './data2.dat'
+FILENAME = './data.dat'
 SAVE_FIGURES_MODE = True
 
 
