@@ -22,7 +22,7 @@ There are the list of packages needed for this project:
   * **matplotlib** - plotting data (tested on version 3.6.3)
   * **scipy** - functions for scientific and technical computing (tested on version 1.10.0)
 
-All third-party packages are listed in [requirements.txt](https://github.com/cimran2001/Spectrum-Analysis/blob/main/requirements.txt) file. 
+All third-party packages are listed in [requirements.txt](./requirements.txt) file. 
 
 Install packages on Windows:
 ```
