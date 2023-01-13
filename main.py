@@ -1,19 +1,18 @@
 import os
 import math
-from dataclasses import dataclass
-from typing import Dict, List, Optional
-from pprint import pprint
 import pickle
+from dataclasses import dataclass
+from typing import Iterable, Dict, Optional
+from pprint import pprint
 
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.signal import find_peaks
 from scipy.optimize import curve_fit
 
-
 FIGURES_PATH = './Figures'
 FILENAME = './data.dat'
-SAVE_FIGURES_MODE = True
+SAVE_FIGURES_MODE = False
 
 
 @dataclass
@@ -36,7 +35,7 @@ def import_data(filename: str) -> Optional[Data]:
 
     freq_max = data['Frequency Max']
     freq_min = data['Frequency Min']
-    freq_step = data['Frequency Step'] 
+    freq_step = data['Frequency Step']
     freqs = np.arange(freq_min, freq_max, freq_step)
 
     spectrums = data['Pure Spectrums']
@@ -69,12 +68,17 @@ def get_peaks_all(spectrums: Dict[str, np.array]) -> Dict[str, np.array]:
 
 
 def get_concentrations(frequencies: np.array, measurements: np.array, spectrums: np.array) -> np.array:
-    def solution_spectrum(_, *concentrations: List[float]) -> np.array:
+    def solution_spectrum(_, *concentrations: Iterable[float]) -> np.array:
         return sum(spectrum * concentration for spectrum, concentration in zip(spectrums.values(), concentrations))
-    return np.array(np.array([curve_fit(solution_spectrum, frequencies, measurement, p0=[1] * len(spectrums))[0] for measurement in measurements]) * 1e-6).transpose()
+
+    calculated_concentrations = (np.array([
+        curve_fit(solution_spectrum, frequencies, measurement, p0=[1] * len(spectrums))[0]
+        for measurement in measurements]) * 1e-6).transpose()
+    return calculated_concentrations
 
 
-def plot_concentrations(timeline: np.array, concentrations: np.array, labels: List[str], save_figure: bool = False) -> None:
+def plot_concentrations(timeline: np.array, concentrations: np.array,
+                        labels: Iterable[str], save_figure: bool = False) -> None:
     plt.clf()
     for row, label in enumerate(labels):
         plt.plot(timeline, concentrations[row], label=label)
@@ -98,7 +102,8 @@ def get_random_product_concentration(concentrations: np.array) -> Optional[np.ar
 def get_reaction_rate(concentrations: np.array, timeline: np.array) -> float:
     product_concentration = get_random_product_concentration(concentrations)
     product_based_rate = np.diff(product_concentration) / np.diff(timeline)
-    rates = product_based_rate / math.prod(np.array([concentration[:-1] for concentration in concentrations if not is_product(concentration)]))
+    rates = product_based_rate / math.prod(
+        np.array([concentration[:-1] for concentration in concentrations if not is_product(concentration)]))
     return rates.mean()
 
 
@@ -107,7 +112,7 @@ def main() -> None:
     if data is None:
         print('Couldn\'t read data. Terminating...')
         return
-    
+
     plot_spectrums(data.frequencies, data.spectrums, SAVE_FIGURES_MODE)
     peaks = get_peaks_all(data.spectrums)
     pprint(peaks)
@@ -117,5 +122,6 @@ def main() -> None:
     print(f'Reaction rate: {k:.2}')
 
 
+# Code starts here
 if __name__ == '__main__':
     main()
